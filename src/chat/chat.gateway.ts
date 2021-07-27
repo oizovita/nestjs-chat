@@ -1,6 +1,4 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { User } from '../users/schemas/user.schema';
-import { JwtService } from '@nestjs/jwt';
 import { RoomsService } from '../rooms/rooms.service';
 
 @WebSocketGateway()
