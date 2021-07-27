@@ -24,13 +24,13 @@ export class UsersService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserDocument | null> {
     return this.UserModel.findByIdAndUpdate(id, updateUserDto).exec();
   }
 
-  async remove(id: number): Promise<UserDocument | null> {
+  async remove(id: string): Promise<UserDocument | null> {
     return this.UserModel.findByIdAndRemove(id).exec();
   }
 }

@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { UpdateRoomDto } from './dto/update-room.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Room } from './schemas/room.schema';
+import { Message } from './schemas/message.schema';
 
 @Injectable()
 export class RoomsService {
-  create(createRoomDto: CreateRoomDto) {
-    return 'This action adds a new room';
+  constructor(@InjectModel('Room') private readonly roomModel: Model<Room>) {}
+
+  async create(createRoomDto: CreateRoomDto) {
+    return this.roomModel.create(createRoomDto);
   }
 
-  findAll() {
-    return `This action returns all rooms`;
+  async findAll() {
+    return this.roomModel.find({}).exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(options?: any) {
+    return this.roomModel.findOne(options).exec();
   }
 
-  update(id: number, updateRoomDto: UpdateRoomDto) {
-    return `This action updates a #${id} room`;
+  async remove(id: string) {
+    return this.roomModel.findByIdAndRemove(id).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} room`;
+  async addMessage(message: Message, id: string) {
+    const room = await this.findOne({ id });
+    room.messages.push(message);
+
+    return room.save();
+  }
+
+  async getMessages(id: string) {
+    const room = await this.findOne({ id });
+
+    return room.messages;
   }
 }
